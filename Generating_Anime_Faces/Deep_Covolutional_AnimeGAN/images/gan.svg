@@ -1,0 +1,48 @@
+
+<svg height="211pt" viewBox="0.00 0.00 331.00 211.00" width="331pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="graph0" transform="scale(1 1) rotate(0) translate(4 207)">
+<title>G</title>
+<polygon fill="white" points="-4,4 -4,-207 327,-207 327,4 -4,4" stroke="none"/>
+<!-- 139831856147200 -->
+<g class="node" id="node1"><title>139831856147200</title>
+<polygon fill="none" points="11,-83.5 11,-129.5 312,-129.5 312,-83.5 11,-83.5" stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="78.5" y="-102.8">Generator: Sequential</text>
+<polyline fill="none" points="146,-83.5 146,-129.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="173.5" y="-114.3">input:</text>
+<polyline fill="none" points="146,-106.5 201,-106.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="173.5" y="-91.3">output:</text>
+<polyline fill="none" points="201,-83.5 201,-129.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="256.5" y="-114.3">(None, 1, 1, 100)</text>
+<polyline fill="none" points="201,-106.5 312,-106.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="256.5" y="-91.3">(None, 64, 64, 3)</text>
+</g>
+<!-- 139831912863112 -->
+<g class="node" id="node2"><title>139831912863112</title>
+<polygon fill="none" points="0,-0.5 0,-46.5 323,-46.5 323,-0.5 0,-0.5" stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="78.5" y="-19.8">Discriminator: Sequential</text>
+<polyline fill="none" points="157,-0.5 157,-46.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.5" y="-31.3">input:</text>
+<polyline fill="none" points="157,-23.5 212,-23.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="184.5" y="-8.3">output:</text>
+<polyline fill="none" points="212,-0.5 212,-46.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="267.5" y="-31.3">(None, 64, 64, 3)</text>
+<polyline fill="none" points="212,-23.5 323,-23.5 " stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="267.5" y="-8.3">(None, 1)</text>
+</g>
+<!-- 139831856147200&#45;&gt;139831912863112 -->
+<g class="edge" id="edge2"><title>139831856147200-&gt;139831912863112</title>
+<path d="M161.5,-83.3664C161.5,-75.1516 161.5,-65.6579 161.5,-56.7252" fill="none" stroke="black"/>
+<polygon fill="black" points="165,-56.6068 161.5,-46.6068 158,-56.6069 165,-56.6068" stroke="black"/>
+</g>
+<!-- 139829648328520 -->
+<g class="node" id="node3"><title>139829648328520</title>
+<polygon fill="none" points="102.5,-166.5 102.5,-202.5 220.5,-202.5 220.5,-166.5 102.5,-166.5" stroke="black"/>
+<text font-family="Times,serif" font-size="14.00" text-anchor="middle" x="161.5" y="-180.8">139829648328520</text>
+</g>
+<!-- 139829648328520&#45;&gt;139831856147200 -->
+<g class="edge" id="edge1"><title>139829648328520-&gt;139831856147200</title>
+<path d="M161.5,-166.254C161.5,-158.363 161.5,-148.749 161.5,-139.602" fill="none" stroke="black"/>
+<polygon fill="black" points="165,-139.591 161.5,-129.591 158,-139.591 165,-139.591" stroke="black"/>
+</g>
+</g>
+</svg>
