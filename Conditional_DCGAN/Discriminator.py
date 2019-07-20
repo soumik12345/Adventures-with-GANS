@@ -1,4 +1,4 @@
-from torch.nn import Conv2d, BatchNorm2d
+from torch.nn import Conv2d, BatchNorm2d, Module
 from torch.nn.functional import leaky_relu, sigmoid
 
 
@@ -11,13 +11,13 @@ class Discriminator(Module):
         self.conv_1_label = Conv2d(2, 64, 4, 2, 1)
 
         self.conv_2 = Conv2d(128, 256, 4, 2, 1)
-        self.batch_norm_2 = Conv2d(256)
+        self.batch_norm_2 = BatchNorm2d(256)
 
         self.conv_3 = Conv2d(256, 512, 4, 2, 1)
-        self.batch_norm_3 = Conv2d(512)
+        self.batch_norm_3 = BatchNorm2d(512)
 
         self.conv_4 = Conv2d(512, 1024, 4, 2, 1)
-        self.batch_norm_4 = Conv2d(1024)
+        self.batch_norm_4 = BatchNorm2d(1024)
 
         self.conv_5 = Conv2d(1024, 1, 2)
     
@@ -56,3 +56,7 @@ class Discriminator(Module):
         output = output.view(-1, 1)
 
         return output
+    
+
+    def display(self):
+        print(self)

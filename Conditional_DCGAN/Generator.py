@@ -61,3 +61,7 @@ class Generator(Module):
         output = tanh(x)
 
         return output
+    
+    
+    def display(self):
+        print(self)
