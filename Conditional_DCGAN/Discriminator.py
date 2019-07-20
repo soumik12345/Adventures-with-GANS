@@ -19,7 +19,7 @@ class Discriminator(Module):
         self.conv_4 = Conv2d(512, 1024, 4, 2, 1)
         self.batch_norm_4 = BatchNorm2d(1024)
 
-        self.conv_5 = Conv2d(1024, 1, 2)
+        self.conv_5 = Conv2d(1024, 1, 2) 
     
 
     def forward(self, inputs, labels):

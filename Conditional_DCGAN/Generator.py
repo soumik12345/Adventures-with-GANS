@@ -1,6 +1,8 @@
 from torch.nn import Module, ConvTranspose2d, BatchNorm2d
 from torch.nn.functional import tanh, leaky_relu
-from torch import cat
+from torch import cat, zeros, LongTensor, rand, randn
+from torch.autograd import Variable
+from Optimizer import AdamOptimizer
 
 
 class Generator(Module):
@@ -24,8 +26,8 @@ class Generator(Module):
         self.batch_norm_4 = BatchNorm2d(64)
 
         self.deconv_5 = ConvTranspose2d(64, 3, 4, 2, 1)
-    
 
+    
     def forward(self, inputs, labels):
 
         # Upsampling Block for Data
