@@ -1,3 +1,4 @@
 env/
 .vscode/
 Conditional_DCGAN/__pycache__/
+CycleGAN/__pycache__
