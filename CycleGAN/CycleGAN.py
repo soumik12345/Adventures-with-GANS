@@ -14,11 +14,11 @@ class CycleGan:
         self.build_discriminators()
         self.build_generators()
 
-        real_A, fake_B, recreated_A, generator_function_A = self.initialize_variables(
+        self.real_A, self.fake_B, self.recreated_A, self.generator_function_A = self.initialize_variables(
             self.generator_B,
             self.generator_A
         )
-        real_B, fake_A, recreated_B, generator_function_B = self.initialize_variables(
+        self.real_B, self.fake_A, self.recreated_B, self.generator_function_B = self.initialize_variables(
             self.generator_A,
             self.generator_B
         )
