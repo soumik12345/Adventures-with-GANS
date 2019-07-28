@@ -9,7 +9,7 @@ class CycleGan:
         
         self.discriminator_filters = discriminator_filters
         self.generator_filters = generator_filters
-        self.is_lsgan = is_lsgan
+        self.loss_function = CycleGAN.ls_loss if is_lsgan else CycleGAN.cycle_gan_loss
 
         self.build_discriminators()
         self.build_generators()
@@ -21,6 +21,20 @@ class CycleGan:
         self.real_B, self.fake_A, self.recreated_B, self.generator_function_B = self.initialize_variables(
             self.generator_A,
             self.generator_B
+        )
+
+        self.discriminator_loss_B = self.discriminator_loss(
+            self.discriminator_B,
+            self.real_B,
+            self.fake_B,
+            self.recreated_B
+        )
+
+        self.discriminator_loss_A = self.discriminator_loss(
+            self.discriminator_A,
+            self.real_A,
+            self.fake_A,
+            self.recreated_A
         )
         
     
@@ -72,3 +86,14 @@ class CycleGan:
         recreated_input = generator_2([fake_output])
         generator_function = K.function([real_input], [fake_output, recreated_input])
         return real_input, fake_output, recreated_input, generator_function
+    
+    
+    def discriminator_loss(self, discrimator, real_image, fake_image, recreated_image):
+        real_output = discrimator([real_image])
+        fake_output = discrimator([fake_image])
+        discriminator_loss_real = self.loss_function(real_output, K.ones_like(real_output))
+        discriminator_loss_fake = self.loss_function(fake_output, K.ones_like(fake_output))
+        discriminator_loss = discriminator_loss_fake + discriminator_loss_real
+        generator_loss = self.loss_function(fake_output, K.ones_like(fake_output))
+        cycle_loss = K.mean(K.abs(recreated_image, real_image))
+        return discriminator_loss, generator_loss, cycle_loss
