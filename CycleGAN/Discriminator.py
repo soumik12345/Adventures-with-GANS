@@ -10,10 +10,9 @@ from tensorflow.keras.models import Model
 
 class Discriminator:
 
-    def __init__(self, n_filters, max_layers, image_height, image_width, image_channels):
+    def __init__(self, n_filters, max_layers, image_size, image_channels):
         
-        self.image_height = image_height
-        self.image_width = image_width
+        self.image_size = image_size
         self.image_channels = image_channels
         self.n_filters = n_filters
         self.max_layers = max_layers
@@ -24,8 +23,8 @@ class Discriminator:
         
         input_placeholder = Input(
             shape = (
-                self.image_height,
-                self.image_width,
+                self.image_size,
+                self.image_size,
                 self.image_channels
             ),
             name = 'Discriminator_Input_Layer'
