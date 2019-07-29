@@ -32,32 +32,16 @@ class CycleGan:
             self.generator_A,
             self.generator_B
         )
-
-        self.discriminator_loss_B, self.generator_loss_B, self.cycle_loss_B = self.discriminator_loss(
-            self.discriminator_B,
-            self.real_B,
-            self.fake_B,
-            self.recreated_B
-        )
-
-        self.discriminator_loss_A, self.generator_loss_A, self.cycle_loss_A = self.discriminator_loss(
-            self.discriminator_A,
-            self.real_A,
-            self.fake_A,
-            self.recreated_A
-        )
-
-        self.cycle_loss = self.cycle_loss_A + self.cycle_loss_B
-        self.generator_loss = self.generator_loss_A + self.generator_loss_B + self._lambda * self.cycle_loss
-        self.discriminator_loss = self.discriminator_loss_A + self.discriminator_loss_B
-
-        self.discriminator_weights = self.discriminator_A.trainable_weights + self.discriminator_B.trainable_weights
-        self.generator_weights = self.generator_A.trainable_weights + self.generator_B.trainable_weights
-
-        self.discriminator_optimizer = Adam(lr = self.discriminator_learning_rate, beta_1 = 0.5)
-        self.generator_optimizer = Adam(lr = self.generator_optimizer, beta_1 = 0.5)
-
         
+        self.compute_loss()
+        self.compute_weights()
+        self.define_optimizers()
+        self.train_discriminator()
+        self.discriminator_training_update()
+        self.generator_training_update()
+
+
+
 
 
 
@@ -122,3 +106,68 @@ class CycleGan:
         generator_loss = self.loss_function(fake_output, K.ones_like(fake_output))
         cycle_loss = K.mean(K.abs(recreated_image, real_image))
         return discriminator_loss, generator_loss, cycle_loss
+    
+
+    def compute_loss(self):
+        self.discriminator_loss_B, self.generator_loss_B, self.cycle_loss_B = self.discriminator_loss(
+            self.discriminator_B,
+            self.real_B,
+            self.fake_B,
+            self.recreated_B
+        )
+        self.discriminator_loss_A, self.generator_loss_A, self.cycle_loss_A = self.discriminator_loss(
+            self.discriminator_A,
+            self.real_A,
+            self.fake_A,
+            self.recreated_A
+        )
+        self.cycle_loss = self.cycle_loss_A + self.cycle_loss_B
+        self.generator_loss = self.generator_loss_A + self.generator_loss_B + self._lambda * self.cycle_loss
+        self.discriminator_loss = self.discriminator_loss_A + self.discriminator_loss_B
+    
+
+    def compute_weights(self):
+        self.discriminator_weights = self.discriminator_A.trainable_weights + self.discriminator_B.trainable_weights
+        self.generator_weights = self.generator_A.trainable_weights + self.generator_B.trainable_weights
+    
+
+    def define_optimizers(self):
+        self.discriminator_optimizer = Adam(lr = self.discriminator_learning_rate, beta_1 = 0.5)
+        self.generator_optimizer = Adam(lr = self.generator_optimizer, beta_1 = 0.5)
+    
+
+    def discriminator_training_update(self):
+        self.training_update = self.discriminator_optimizer.get_updates(
+            self.discriminator_weights, [],
+            self.discriminator_loss
+        )
+        self.discriminator_training = K.function(
+            [
+                self.real_A,
+                self.real_B
+            ],
+            [
+                self.discriminator_loss_A / 2,
+                self.discriminator_loss_B / 2
+            ],
+            self.training_update
+        )
+    
+
+    def generator_training_update(self):
+        self.training_update = self.generator_optimizer.get_updates(
+            self.generator_weights, [],
+            self.generator_loss
+        )
+        self.generator_training = K.function(
+            [
+                self.real_A,
+                self.real_B
+            ],
+            [
+                self.generator_loss_A,
+                self.generator_loss_B,
+                self.cycle_loss
+            ],
+            self.training_update
+        )
