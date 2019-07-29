@@ -1,15 +1,25 @@
 from Discriminator import Discriminator
 from Generator import Generator
 from tensorflow.keras import backend as K
+from tensorflow.keras.optimizer import Adam
 
 
 class CycleGan:
 
-    def __init__(self, discriminator_filters, generator_filters, is_lsgan):
+    def __init__(
+        self,
+        discriminator_filters,
+        generator_filters,
+        generator_learning_rate = 2e-4,
+        discriminator_learning_rate = 2e-4,
+        is_lsgan = False):
         
         self.discriminator_filters = discriminator_filters
+        self.discriminator_learning_rate = discriminator_learning_rate
         self.generator_filters = generator_filters
-        self.loss_function = CycleGAN.ls_loss if is_lsgan else CycleGAN.cycle_gan_loss
+        self.generator_learning_rate = generator_learning_rate
+        self.loss_function = CycleGAN.ls_loss if is_lsgan else CycleGAN.loss
+        self._lambda = 10 if is_lsgan else 100
 
         self.build_discriminators()
         self.build_generators()
@@ -23,19 +33,34 @@ class CycleGan:
             self.generator_B
         )
 
-        self.discriminator_loss_B = self.discriminator_loss(
+        self.discriminator_loss_B, self.generator_loss_B, self.cycle_loss_B = self.discriminator_loss(
             self.discriminator_B,
             self.real_B,
             self.fake_B,
             self.recreated_B
         )
 
-        self.discriminator_loss_A = self.discriminator_loss(
+        self.discriminator_loss_A, self.generator_loss_A, self.cycle_loss_A = self.discriminator_loss(
             self.discriminator_A,
             self.real_A,
             self.fake_A,
             self.recreated_A
         )
+
+        self.cycle_loss = self.cycle_loss_A + self.cycle_loss_B
+        self.generator_loss = self.generator_loss_A + self.generator_loss_B + self._lambda * self.cycle_loss
+        self.discriminator_loss = self.discriminator_loss_A + self.discriminator_loss_B
+
+        self.discriminator_weights = self.discriminator_A.trainable_weights + self.discriminator_B.trainable_weights
+        self.generator_weights = self.generator_A.trainable_weights + self.generator_B.trainable_weights
+
+        self.discriminator_optimizer = Adam(lr = self.discriminator_learning_rate, beta_1 = 0.5)
+        self.generator_optimizer = Adam(lr = self.generator_optimizer, beta_1 = 0.5)
+
+        
+
+
+
         
     
     def build_discriminators(self):
