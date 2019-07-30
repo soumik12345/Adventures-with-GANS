@@ -2,6 +2,11 @@ from Discriminator import Discriminator
 from Generator import Generator
 from tensorflow.keras import backend as K
 from tensorflow.keras.optimizer import Adam
+from PIL import Image
+from glob import glob
+from random import shuffle, randint, sample
+import numpy as np
+from PIL import Image
 
 
 class CycleGan:
@@ -9,6 +14,8 @@ class CycleGan:
     def __init__(
         self,
         discriminator_filters,
+        base_directory,
+        subdirectory_names,
         generator_filters,
         generator_learning_rate = 2e-4,
         discriminator_learning_rate = 2e-4,
@@ -39,6 +46,7 @@ class CycleGan:
         self.train_discriminator()
         self.discriminator_training_update()
         self.generator_training_update()
+        self.load_data(base_directory, subdirectory_names)
 
 
 
@@ -46,7 +54,19 @@ class CycleGan:
 
 
         
+    def read_image(self, image_path):
+        image = Image.open(image_path).convert('RGB').resize((128, 128), Image.BILINEAR)
+        image = np.array(image) / 255 * 2 - 1
+        if randint(0, 1) == 1:
+            image = image[:, ::-1]
+        return image
     
+
+    def load_data(self, base_directory, subdirectory_names):
+        self.data_A = shuffle(glob(base_directory + subdirectory_names[0] + '/*'))
+        self.data_B = shuffle(glob(base_directory + subdirectory_names[1] + '/*'))
+
+
     def build_discriminators(self):
         
         self.discriminator_A = Discriminator(
