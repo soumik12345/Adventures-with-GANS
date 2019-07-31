@@ -19,6 +19,7 @@ class CycleGan:
         generator_filters,
         generator_learning_rate = 2e-4,
         discriminator_learning_rate = 2e-4,
+        batch_size = 16,
         is_lsgan = False):
         
         self.discriminator_filters = discriminator_filters
@@ -27,6 +28,7 @@ class CycleGan:
         self.generator_learning_rate = generator_learning_rate
         self.loss_function = CycleGAN.ls_loss if is_lsgan else CycleGAN.loss
         self._lambda = 10 if is_lsgan else 100
+        self.batch_size = batch_size
 
         self.build_discriminators()
         self.build_generators()
@@ -65,6 +67,16 @@ class CycleGan:
     def load_data(self, base_directory, subdirectory_names):
         self.data_A = shuffle(glob(base_directory + subdirectory_names[0] + '/*'))
         self.data_B = shuffle(glob(base_directory + subdirectory_names[1] + '/*'))
+    
+
+    def batch(self, dataset):
+        temp_size, epoch, i, data_length = None, 0, 0, len(dataset)
+        while True:
+            size = temp_size if temp_size else self.batch_size
+            if i > data_length - size:
+                i = 0
+                epoch += 1
+            image = [self.read_image(dataset[j])]
 
 
     def build_discriminators(self):
