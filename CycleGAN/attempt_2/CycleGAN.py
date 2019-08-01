@@ -1,8 +1,11 @@
 from Generator import Generator
 from Discriminator import Discriminator
+from ImageHelper import ImageHelper
 from keras.optimizers import Adam
 from keras.layers import Input
 from keras.models import Model
+from tqdm import tqdm, tqdm_notebook
+import numpy as np
 
 
 class CycleGAN:
@@ -16,6 +19,7 @@ class CycleGAN:
         self.lambda_cycle = lambda_cycle
         self.lambda_id = 0.1 * self.lambda_cycle
         self.optimizer = Adam(0.0002, 0.5)
+        self.discrimator_loss_history, self.generator_loss_history = [], []
 
         self.get_output_patch()
 
@@ -87,3 +91,38 @@ class CycleGAN:
 
     def display(self):
         self.gan.summary()
+    
+
+    def train(self, path, batch_size, epochs, is_env_notebook = False):
+
+        valid = np.ones((batch_size, ) + self.discrimator_patch)
+        fake = np.zeros((batch_size, ) + self.discrimator_patch)
+
+        epoch_range = tqdm_notebook(range(epochs)) if is_env_notebook else tqdm(range(epochs))
+
+        for epoch in epoch_range:
+            for batch, (images_A, images_B) in enumerate(ImageHelper.load_batch(path, batch_size = batch_size, image_resolution = self.image_shape[:2])):
+                
+                fake_B = self.generator_AB.predict(image_A)
+                fake_A = self.generator_BA.predict(image_B)
+
+                disc_loss_real_A = self.discriminator_A.train_on_batch(images_A, valid)
+                disc_loss_fake_A = self.discriminator_A.train_on_batch(fake_A, fake)
+                disc_loss_A = 0.5 * np.add(disc_loss_real_A, disc_loss_fake_A)
+
+                disc_loss_real_B = self.discriminator_B.train_on_batch(images_B, valid)
+                disc_loss_fake_B = self.discriminator_B.train_on_batch(fake_B, fake)
+                disc_loss_B = 0.5 * np.add(disc_loss_real_B, disc_loss_fake_B)
+
+                discriminator_loss = 0.5 * np.add(disc_loss_A, disc_loss_B)
+                self.discriminator_loss_history.append(discriminator_loss)
+
+                generator_loss = self.gan.train_on_batch(
+                    [images_A, images_B],
+                    [
+                        valid, valid,
+                        images_A, images_B,
+                        images_A, images_B
+                    ]
+                )
+                self.generator_loss_history.append(generator_loss)
