@@ -32,3 +32,4 @@ class Discriminator:
 
     def display(self):
         self.discrimator.summary()
+    
