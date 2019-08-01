@@ -43,6 +43,7 @@ class ImageHelper:
             images_B.append(image_B)
         images_A = np.array(images_A) / 127.5 - 1.0
         images_B = np.array(images_B) / 127.5 - 1.0
+        images_A = images_A.reshpae(batch_size, image_resolution[0], image_resolution[1], 3)
         yield images_A, images_B
     
     def visualize_batch(self, rows, cols, figsize, images_A, images_B, A_title, B_title):
