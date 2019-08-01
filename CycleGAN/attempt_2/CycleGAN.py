@@ -103,8 +103,8 @@ class CycleGAN:
         for epoch in epoch_range:
             for batch, (images_A, images_B) in enumerate(ImageHelper.load_batch(path, batch_size = batch_size, image_resolution = self.image_shape[:2])):
                 
-                fake_B = self.generator_AB.predict(image_A)
-                fake_A = self.generator_BA.predict(image_B)
+                fake_B = self.generator_AB.predict(images_A)
+                fake_A = self.generator_BA.predict(images_B)
 
                 disc_loss_real_A = self.discriminator_A.train_on_batch(images_A, valid)
                 disc_loss_fake_A = self.discriminator_A.train_on_batch(fake_A, fake)
