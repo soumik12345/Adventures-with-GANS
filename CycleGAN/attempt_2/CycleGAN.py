@@ -19,7 +19,7 @@ class CycleGAN:
         self.lambda_cycle = lambda_cycle
         self.lambda_id = 0.1 * self.lambda_cycle
         self.optimizer = Adam(0.0002, 0.5)
-        self.discrimator_loss_history, self.generator_loss_history = [], []
+        self.discriminator_loss_history, self.generator_loss_history = [], []
 
         self.get_output_patch()
 
