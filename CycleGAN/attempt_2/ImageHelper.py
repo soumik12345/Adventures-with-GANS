@@ -8,7 +8,7 @@ from skimage.transform import resize
 class ImageHelper:
     
     @staticmethod
-    def load_images(self, path, dataset_type = 'train', batch_size = 1, image_resolution = (128, 128)):
+    def load_images(path, dataset_type = 'train', batch_size = 1, image_resolution = (128, 128)):
         path_A = np.array(glob(path + dataset_type + 'A/*'))
         path_B = np.array(glob(path + dataset_type + 'B/*'))
         path_A_samples = list(path_A[np.random.randint(0, len(path_A), batch_size)])
@@ -27,7 +27,7 @@ class ImageHelper:
         return images_A, images_B
     
     @staticmethod
-    def load_batch(self, path, dataset_type = 'train', batch_size = 1, image_resolution = (128, 128)):
+    def load_batch(path, dataset_type = 'train', batch_size = 1, image_resolution = (128, 128)):
         path_A = np.array(glob(path + dataset_type + 'A/*'))
         path_B = np.array(glob(path + dataset_type + 'B/*'))
         path_A_samples = list(path_A[np.random.randint(0, len(path_A), batch_size)])
